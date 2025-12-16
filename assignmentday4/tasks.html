@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>DOM & Events Day-4</title>
+  <style>
+    body {
+      font-family: Arial;
+      padding: 20px;
+    }
+    .box {
+      width: 100px;
+      height: 100px;
+      background: lightblue;
+      border: 2px solid black;
+      margin: 10px 0;
+    }
+    .dark {
+      background: black;
+      color: white;
+    }
+  </style>
+</head>
+<body>
+
+<!-- Task 1 -->
+<p id="text">Hello</p>
+<button onclick="changeText()">Click Me</button>
+
+<hr>
+
+<!-- Task 2 -->
+<button onclick="changeColor('red')">Red</button>
+<button onclick="changeColor('blue')">Blue</button>
+<button onclick="changeColor('green')">Green</button>
+
+<hr>
+
+<!-- Task 3 -->
+<img id="img" src="https://via.placeholder.com/150" width="150">
+<br>
+<button onclick="prevImg()">Previous</button>
+<button onclick="nextImg()">Next</button>
+
+<hr>
+
+<!-- Task 4 -->
+<p id="para">This is a paragraph</p>
+<button onclick="togglePara()">Show / Hide</button>
+
+<hr>
+
+<!-- Task 5 -->
+<button onclick="decrease()">-</button>
+<span id="count">0</span>
+<button onclick="increase()">+</button>
+
+<hr>
+
+<!-- Task 6 -->
+<button onclick="addBox()">Add Box</button>
+
+<hr>
+
+<!-- Task 7 -->
+<input type="text" id="nameInput" placeholder="Enter name">
+<button onclick="showName()">Submit</button>
+<p id="output"></p>
+
+<hr>
+
+<!-- Task 8 -->
+<input type="text" id="taskInput" placeholder="Enter task">
+<button onclick="addTask()">Add Task</button>
+<ul id="taskList"></ul>
+
+<hr>
+
+<!-- Task 9 -->
+<img id="pic" src="https://via.placeholder.com/100">
+<br>
+<button onclick="small()">Small</button>
+<button onclick="large()">Large</button>
+
+<hr>
+
+<!-- Task 10 -->
+<button onclick="toggleTheme()">Toggle Theme</button>
+
+<hr>
+
+<!-- Task 11 -->
+<p id="clock"></p>
+
+<hr>
+
+<!-- Task 12 -->
+<p id="quote">Click button for quote</p>
+<button onclick="newQuote()">New Quote</button>
+
+<script>
+/* Task 1 */
+function changeText() {
+  document.getElementById("text").innerText = "Welcome to JavaScript!";
+}
+
+/* Task 2 */
+function changeColor(color) {
+  document.body.style.backgroundColor = color;
+}
+
+/* Task 3 */
+let images = [
+  "https://via.placeholder.com/150",
+  "https://via.placeholder.com/150/0000FF"
+];
+let index = 0;
+function nextImg() {
+  index = (index + 1) % images.length;
+  document.getElementById("img").src = images[index];
+}
+function prevImg() {
+  index = (index - 1 + images.length) % images.length;
+  document.getElementById("img").src = images[index];
+}
+
+/* Task 4 */
+function togglePara() {
+  let p = document.getElementById("para");
+  p.style.display = p.style.display === "none" ? "block" : "none";
+}
+
+/* Task 5 */
+let count = 0;
+function increase() {
+  count++;
+  document.getElementById("count").innerText = count;
+}
+function decrease() {
+  if (count > 0) count--;
+  document.getElementById("count").innerText = count;
+}
+
+/* Task 6 */
+function addBox() {
+  let div = document.createElement("div");
+  div.className = "box";
+  document.body.appendChild(div);
+}
+
+/* Task 7 */
+function showName() {
+  let name = document.getElementById("nameInput").value;
+  document.getElementById("output").innerText = "Hello " + name;
+}
+
+/* Task 8 */
+function addTask() {
+  let task = document.getElementById("taskInput").value;
+  let li = document.createElement("li");
+  li.innerText = task;
+  document.getElementById("taskList").appendChild(li);
+}
+
+/* Task 9 */
+function small() {
+  document.getElementById("pic").setAttribute("width", "100");
+}
+function large() {
+  document.getElementById("pic").setAttribute("width", "200");
+}
+
+/* Task 10 */
+function toggleTheme() {
+  document.body.classList.toggle("dark");
+}
+
+/* Task 11 */
+setInterval(() => {
+  document.getElementById("clock").innerText = new Date().toLocaleTimeString();
+}, 1000);
+
+/* Task 12 */
+let quotes = [
+  "Code is poetry",
+  "Practice makes perfect",
+  "JavaScript is powerful",
+  "Never stop learning"
+];
+function newQuote() {
+  let q = Math.floor(Math.random() * quotes.length);
+  document.getElementById("quote").innerText = quotes[q];
+}
+</script>
+
+</body>
+</html>

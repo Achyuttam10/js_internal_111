@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Demo of any Project staring</title>
+  <link rel="stylesheet" href="event.css">
+</head>
+</body>
+<body>
+  <header class="site-header">
+    <h1>Assessment Online Project</h1>
+  </header>
+
+  <nav class="topnav">
+    <ul>
+      <li><a href="#">Home</a></li>
+      <li><a href="#">Gallery</a></li>
+      <li><a href="#">Menu3</a></li>
+      <li><a href="#">Menu4</a></li>
+      <li><a href="#">Menu5</a></li>
+      <li><a href="#">Menu6</a></li>
+    </ul>
+  </nav>
+
+  <main class="columns">
+    <aside class="col left">
+      <div class="box">
+        <h2>Sidebar</h2>
+        <p>text1</p>
+        <p>text1</p>
+        <p>text1</p>
+        <p>text1</p>
+        <p>text1</p>
+        <p>text1</p>
+        <p>text1</p>
+        <p>text1</p>
+      </div>
+    </aside>
+
+    <section class="col center">
+      <div class="box notices">
+        <h2>Important Notice</h2>
+        <div class="notice-list">
+          <p>Notice 1</p>
+          <p>Notice 2</p>
+          <p>Notice 3</p>
+          <p>Notice 4</p>
+          <p>Notice 5</p>
+          <p>Notice 6</p>
+          <p>Notice 7</p>
+          <p>Notice 8</p>
+        </div>
+      </div>
+    </section>
+
+    <aside class="col right">
+      <div class="box login">
+        <h2>Login</h2>
+        <form action="log.html" method="get" class="login-form">
+          <label for="username">User Name</label>
+          <input id="username" name="username" type="text" placeholder="Enter any text" />
+          <label for="password">Password</label>
+          <input id="password" name="password" type="password" placeholder="Enter your password" />
+          <div class="form-actions">
+            <button type="submit" class="btn">Submit</button>
+            <button type="reset" class="btn btn-muted">Cancel</button>
+          </div>
+        </form>
+        <a class="signup" href="reg.html" target="_blank" rel="noopener">New User or Signup</a>
+      </div>
+    </aside>
+  </main>
+
+  <footer class="site-footer">
+    <hr />
+    <p>© Demo Project</p>
+  </footer>
+
+  <script>
+    (function(){
+      const container = document.querySelector('.notices .notice-list');
+      if(!container) return; // nothing to do
+
+      // Disable auto-scroll on small screens
+      if(window.matchMedia('(max-width:900px)').matches) return;
+
+      // collect the original items
+      const originalItems = Array.from(container.children);
+      if(originalItems.length === 0) return;
+
+      // if content fits, do nothing
+      if(container.scrollHeight <= container.clientHeight) return;
+
+      // duplicate items for seamless looping
+      const fragment = document.createDocumentFragment();
+      originalItems.forEach(n => fragment.appendChild(n.cloneNode(true)));
+      container.appendChild(fragment);
+
+      let paused = false;
+      let index = 0; // index within originalItems
+      const pauseBetween = 0; // ms to pause between items (0 for continuous)
+      const duration = 1200; // ms animation duration (smooth)
+
+      // helper: animate scrollTop to target (ease in-out)
+      function animateTo(target){
+        return new Promise(resolve => {
+          const start = container.scrollTop;
+          const change = target - start;
+          const startTime = performance.now();
+          function step(now){
+            const t = Math.min(1, (now - startTime)/duration);
+            // easeInOutCubic
+            const eased = t<.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2;
+            container.scrollTop = start + change * eased;
+            if(t < 1) requestAnimationFrame(step);
+            else resolve();
+          }
+          requestAnimationFrame(step);
+        });
+      }
+
+      function getOffsetForIndex(i){
+        const el = container.children[i];
+        return el ? el.offsetTop : 0;
+      }
+
+      // pause/resume handlers
+      container.addEventListener('mouseenter', ()=> paused = true);
+      container.addEventListener('mouseleave', ()=> paused = false);
+      document.addEventListener('visibilitychange', ()=> { paused = document.hidden; });
+
+      // loop sequentially through original items
+      (async function loop(){
+        // ensure starting at top
+        container.scrollTop = 0;
+        index = 0;
+        while(true){
+          if(paused){
+            await new Promise(r=> setTimeout(r, 200));
+            continue;
+          }
+
+          const nextIndex = index + 1; // we want to scroll so the next item aligns to top
+          const target = getOffsetForIndex(nextIndex);
+
+          await animateTo(target);
+
+          // small pause to allow user to read
+          let waited = 0;
+          while(waited < pauseBetween){
+            if(paused) break;
+            await new Promise(r => setTimeout(r, 100));
+            waited += 100;
+          }
+
+          index++;
+          // when we've shown all original items, reset to start without animation
+          if(index >= originalItems.length){
+            container.scrollTop = 0;
+            index = 0;
+          }
+        }
+      })();
+
+      // responsive handling: if resized to small screen, stop the auto-scroll
+      let resizeTimeout;
+      window.addEventListener('resize', ()=>{
+        clearTimeout(resizeTimeout);
+        resizeTimeout = setTimeout(()=>{
+          if(window.matchMedia('(max-width:900px)').matches){
+            paused = true;
+          }
+        }, 200);
+      });
+
+    })();
+  </script>
+</body>
+</html>

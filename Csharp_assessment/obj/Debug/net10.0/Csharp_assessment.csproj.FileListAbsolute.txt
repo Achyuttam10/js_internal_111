@@ -1,0 +1,15 @@
+/workspaces/js_internal_111/Csharp_assessment/bin/Debug/net10.0/Csharp_assessment
+/workspaces/js_internal_111/Csharp_assessment/bin/Debug/net10.0/Csharp_assessment.deps.json
+/workspaces/js_internal_111/Csharp_assessment/bin/Debug/net10.0/Csharp_assessment.runtimeconfig.json
+/workspaces/js_internal_111/Csharp_assessment/bin/Debug/net10.0/Csharp_assessment.dll
+/workspaces/js_internal_111/Csharp_assessment/bin/Debug/net10.0/Csharp_assessment.pdb
+/workspaces/js_internal_111/Csharp_assessment/obj/Debug/net10.0/Csharp_assessment.GeneratedMSBuildEditorConfig.editorconfig
+/workspaces/js_internal_111/Csharp_assessment/obj/Debug/net10.0/Csharp_assessment.AssemblyInfoInputs.cache
+/workspaces/js_internal_111/Csharp_assessment/obj/Debug/net10.0/Csharp_assessment.AssemblyInfo.cs
+/workspaces/js_internal_111/Csharp_assessment/obj/Debug/net10.0/Csharp_assessment.csproj.CoreCompileInputs.cache
+/workspaces/js_internal_111/Csharp_assessment/obj/Debug/net10.0/Csharp_assessment.sourcelink.json
+/workspaces/js_internal_111/Csharp_assessment/obj/Debug/net10.0/Csharp_assessment.dll
+/workspaces/js_internal_111/Csharp_assessment/obj/Debug/net10.0/refint/Csharp_assessment.dll
+/workspaces/js_internal_111/Csharp_assessment/obj/Debug/net10.0/Csharp_assessment.pdb
+/workspaces/js_internal_111/Csharp_assessment/obj/Debug/net10.0/Csharp_assessment.genruntimeconfig.cache
+/workspaces/js_internal_111/Csharp_assessment/obj/Debug/net10.0/ref/Csharp_assessment.dll

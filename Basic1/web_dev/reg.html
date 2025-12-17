@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Student Registration</title>
+  <style>
+    body {font-family: Arial, Helvetica, sans-serif; padding: 24px; max-width:900px; margin:auto}
+    h1{color:#0b6}
+    form{background:#f7f7f7;padding:16px;border-radius:6px;border:1px solid #ddd}
+    .row{display:flex;gap:12px;margin-bottom:12px;align-items:center}
+    label{min-width:140px}
+    input[type=text], input[type=email], select{flex:1;padding:8px;border:1px solid #ccc;border-radius:4px}
+    .error{color:#b33;font-size:0.9em;margin-top:4px}
+    .preview{margin-top:18px;padding:12px;border-radius:6px;background:#fff;border:1px solid #e6e6e6}
+    .success{color:green;font-weight:600}
+    .actions{display:flex;gap:8px;align-items:center}
+    .hidden{display:none}
+    .radio-group{display:flex;gap:12px;align-items:center}
+  </style>
+  <link rel="stylesheet" href="registration.css">
+</head>
+<body>
+  <h1>Student Registration Form</h1>
+  <p>Please fill in the details. The preview updates live as you type. All fields are validated on submit.</p>
+
+  <form id="regForm" novalidate>
+    <div class="row">
+      <label for="name">Name</label>
+      <div style="flex:1">
+        <input id="name" name="name" type="text" placeholder="Full name" />
+        <div class="error hidden" id="nameError">Name is required.</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <label for="email">Email</label>
+      <div style="flex:1">
+        <input id="email" name="email" type="email" placeholder="you@example.com" />
+        <div class="error hidden" id="emailError">Please enter a valid email.</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <label>Gender</label>
+      <div class="radio-group">
+        <label><input type="radio" name="gender" value="Male"> Male</label>
+        <label><input type="radio" name="gender" value="Female"> Female</label>
+        <label><input type="radio" name="gender" value="Other"> Other</label>
+      </div>
+    </div>
+    <div class="row">
+      <div style="margin-left:140px">
+        <div class="error hidden" id="genderError">Please select a gender.</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <label for="course">Course</label>
+      <div style="flex:1">
+        <select id="course" name="course">
+          <option value="">-- Select Course --</option>
+          <option>Mathematics</option>
+          <option>Computer Science</option>
+          <option>Physics</option>
+          <option>Chemistry</option>
+          <option>Biology</option>
+        </select>
+        <div class="error hidden" id="courseError">Please select a course.</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <label>Terms</label>
+      <div>
+        <label><input id="terms" type="checkbox" /> I agree to the Terms & Conditions</label>
+        <div class="error hidden" id="termsError">You must accept the terms.</div>
+      </div>
+    </div>
+
+    <div class="row actions">
+      <button type="submit">Submit</button>
+      <button type="reset" id="resetBtn">Reset</button>
+      <div id="formMessage" class="hidden" style="margin-left:8px"></div>
+      <div id="redirectNotice" class="hidden" style="margin-left:8px"></div>
+    </div>
+  </form>
+
+  <section class="preview" aria-live="polite">
+    <h3>Live Preview</h3>
+    <div><strong>Name:</strong> <span id="pName">-</span></div>
+    <div><strong>Email:</strong> <span id="pEmail">-</span></div>
+    <div><strong>Gender:</strong> <span id="pGender">-</span></div>
+    <div><strong>Course:</strong> <span id="pCourse">-</span></div>
+    <div><strong>Terms accepted:</strong> <span id="pTerms">No</span></div>
+  </section>
+
+  <script>
+    // Elements
+    const form = document.getElementById('regForm');
+    const nameInput = document.getElementById('name');
+    const emailInput = document.getElementById('email');
+    const courseSelect = document.getElementById('course');
+    const termsInput = document.getElementById('terms');
+
+    const nameError = document.getElementById('nameError');
+    const emailError = document.getElementById('emailError');
+    const genderError = document.getElementById('genderError');
+    const courseError = document.getElementById('courseError');
+    const termsError = document.getElementById('termsError');
+
+    const pName = document.getElementById('pName');
+    const pEmail = document.getElementById('pEmail');
+    const pGender = document.getElementById('pGender');
+    const pCourse = document.getElementById('pCourse');
+    const pTerms = document.getElementById('pTerms');
+
+    const formMessage = document.getElementById('formMessage');
+
+    // Utility
+    function showError(el){ el.classList.remove('hidden'); }
+    function hideError(el){ el.classList.add('hidden'); }
+
+    // basic sanitizer to avoid injecting HTML when rendering user input
+    function escapeHtml(str){
+      if(str === undefined || str === null) return '';
+      return String(str).replace(/[&<>"']/g, function(s){
+        return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[s];
+      });
+    }
+
+    // Live update function
+    function updatePreview(){
+      pName.textContent = nameInput.value.trim() || '-';
+      pEmail.textContent = emailInput.value.trim() || '-';
+      const g = document.querySelector('input[name="gender"]:checked');
+      pGender.textContent = g ? g.value : '-';
+      pCourse.textContent = courseSelect.value || '-';
+      pTerms.textContent = termsInput.checked ? 'Yes' : 'No';
+    }
+
+    // Attach listeners
+    nameInput.addEventListener('input', ()=>{ updatePreview(); hideError(nameError); });
+    emailInput.addEventListener('input', ()=>{ updatePreview(); hideError(emailError); });
+    courseSelect.addEventListener('change', ()=>{ updatePreview(); hideError(courseError); });
+    termsInput.addEventListener('change', ()=>{ updatePreview(); hideError(termsError); });
+    document.querySelectorAll('input[name="gender"]').forEach(r => r.addEventListener('change', ()=>{ updatePreview(); hideError(genderError); }));
+
+    // Validation helpers
+    function isValidEmail(email){
+      // simple regex for demonstration; relies on type=email too
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    form.addEventListener('submit', function(ev){
+      ev.preventDefault();
+      let valid = true;
+      const nameVal = nameInput.value.trim();
+      const emailVal = emailInput.value.trim();
+      const genderVal = document.querySelector('input[name="gender"]:checked');
+      const courseVal = courseSelect.value;
+      const termsVal = termsInput.checked;
+
+      // Reset messages
+      hideError(nameError); hideError(emailError); hideError(genderError); hideError(courseError); hideError(termsError);
+      formMessage.classList.add('hidden'); formMessage.textContent = '';
+
+      if(!nameVal){ showError(nameError); valid=false; nameInput.focus(); }
+      if(!emailVal || !isValidEmail(emailVal)){ showError(emailError); if(valid){ emailInput.focus(); } valid=false; }
+      if(!genderVal){ showError(genderError); if(valid){ document.querySelector('input[name="gender"]').focus(); } valid=false; }
+      if(!courseVal){ showError(courseError); if(valid){ courseSelect.focus(); } valid=false; }
+      if(!termsVal){ showError(termsError); if(valid){ termsInput.focus(); } valid=false; }
+
+      if(!valid) {
+        formMessage.textContent = 'Please fix the highlighted fields.';
+        formMessage.classList.remove('hidden');
+        formMessage.classList.remove('success');
+        formMessage.style.color = '#b33';
+        return;
+      }
+
+      // If valid, display success and the output
+      formMessage.textContent = 'Registration successful!';
+      formMessage.classList.remove('hidden');
+      formMessage.classList.add('success');
+      formMessage.style.color = 'green';
+
+      const user = {
+        name: nameVal,
+        email: emailVal,
+        gender: genderVal.value,
+        course: courseVal,
+        termsAccepted: termsVal
+      };
+
+      // Save to sessionStorage so the success page can read it
+      try {
+        sessionStorage.setItem('latestRegistration', JSON.stringify(user));
+      } catch (e) {
+        console.warn('Could not save to sessionStorage', e);
+      }
+
+      // Show a styled user card in the preview area (append)
+      const userCard = document.createElement('div');
+      userCard.className = 'user-card';
+      userCard.id = 'userCard';
+      userCard.innerHTML = `
+        <div class="user-item"><div class="label">Name</div><div class="value">${escapeHtml(user.name)}</div></div>
+        <div class="user-item"><div class="label">Email</div><div class="value">${escapeHtml(user.email)}</div></div>
+        <div class="user-item"><div class="label">Gender</div><div class="value">${escapeHtml(user.gender)}</div></div>
+        <div class="user-item"><div class="label">Course</div><div class="value">${escapeHtml(user.course)}</div></div>
+        <div class="user-item"><div class="label">Terms accepted</div><div class="value">${user.termsAccepted ? 'Yes' : 'No'}</div></div>
+      `;
+      // Remove any previous card
+      const existing = document.getElementById('userCard'); if(existing) existing.remove();
+      document.querySelector('.preview').appendChild(userCard);
+
+      // Show redirect notice and start countdown to success page
+      const redirectNotice = document.getElementById('redirectNotice');
+      let countdown = 3;
+      redirectNotice.textContent = `Redirecting in ${countdown} seconds...`;
+      redirectNotice.classList.remove('hidden');
+      const intervalId = setInterval(()=>{
+        countdown--;
+        if(countdown>0){
+          redirectNotice.textContent = `Redirecting in ${countdown} seconds...`;
+        } else {
+          clearInterval(intervalId);
+          // Navigate to success page
+          window.location.href = 'registration-success.html';
+        }
+      }, 1000);
+
+      // Optionally clear the form after successful submission (commented out)
+      // form.reset(); updatePreview();
+    });
+
+    // Reset handler to clear preview messages
+    document.getElementById('resetBtn').addEventListener('click', ()=>{
+      hideError(nameError); hideError(emailError); hideError(genderError); hideError(courseError); hideError(termsError);
+      formMessage.classList.add('hidden'); formMessage.textContent = '';
+      const existing = document.getElementById('userCard'); if(existing) existing.remove();
+      setTimeout(updatePreview, 50);
+    });
+
+    // Initial preview
+    updatePreview();
+  </script>
+</body>
+</html>

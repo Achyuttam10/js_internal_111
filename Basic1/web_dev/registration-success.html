@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Registration Success</title>
+  <style>
+    body{font-family: Arial, Helvetica, sans-serif; padding:24px; max-width:900px;margin:auto}
+    h1{color:green}
+    .card{background:#f7f7f7;padding:18px;border-radius:8px;border:1px solid #e6e6e6}
+    pre{background:#fff;padding:12px;border-radius:6px;border:1px solid #eee}
+    .no-data{color:#b33}
+    a.button{display:inline-block;margin-top:12px;padding:8px 12px;border-radius:6px;background:#0b6;color:#fff;text-decoration:none}
+  </style>
+  <link rel="stylesheet" href="registration.css">
+</head>
+<body>
+  <h1>Registration Received</h1>
+  <div id="content" class="card">
+    <p>Loading registration data...</p>
+  </div>
+  <script>
+    const content = document.getElementById('content');
+    const raw = sessionStorage.getItem('latestRegistration');
+    if(!raw){
+      content.innerHTML = '<p class="no-data">No registration data found. <a href="reg.html">Go back to the form</a></p>';
+    } else {
+      try {
+        const user = JSON.parse(raw);
+        content.innerHTML = `
+          <h2 style="margin-top:0">Submitted Details</h2>
+          <div class="user-card">
+            <div class="user-item"><div class="label">Name</div><div class="value">${escapeHtml(user.name)}</div></div>
+            <div class="user-item"><div class="label">Email</div><div class="value">${escapeHtml(user.email)}</div></div>
+            <div class="user-item"><div class="label">Gender</div><div class="value">${escapeHtml(user.gender)}</div></div>
+            <div class="user-item"><div class="label">Course</div><div class="value">${escapeHtml(user.course)}</div></div>
+            <div class="user-item"><div class="label">Terms accepted</div><div class="value">${user.termsAccepted ? 'Yes' : 'No'}</div></div>
+          </div>
+          <a class="button" href="reg.html">Register another student</a>
+        `;
+      } catch (e){
+        content.innerHTML = '<p class="no-data">Error reading registration data.</p>';
+      }
+    }
+
+    // basic sanitizer
+    function escapeHtml(str){
+      if(!str) return '';
+      return String(str).replace(/[&<>"']/g, function(s){
+        return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"})[s];
+      });
+    }
+  </script>
+</body>
+</html>
